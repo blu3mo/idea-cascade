@@ -16,9 +16,9 @@ async function generateNewText(prompt, openai) {
     const chatCompletion = await openai.chat.completions.create({
         messages: [{
             role: 'user',
-            content: "Generate a new idea for: " + prompt + "\n" +
+            content: "Generate: " + prompt + "\n" +
             "Language: Japanese.\n" + 
-            "Idea must be " + adjective + ".\n" +
+            "Generated text must be " + adjective + ".\n" +
             "Only output the idea.",
         }],
         model: 'gpt-3.5-turbo',
