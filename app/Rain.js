@@ -50,7 +50,7 @@ const Rain = () => {
           overflowWrap: 'break-word',
           fontSize: `${size}px`,
           animation: `fall ${animationDuration}s linear`,
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
           // align vertical to center
           display: 'flex',
           alignItems: 'center',
