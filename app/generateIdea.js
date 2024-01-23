@@ -18,6 +18,7 @@ async function generateNewText(prompt, openai) {
             role: 'user',
             content: "Generate: " + prompt + "\n" +
             "Language: Japanese.\n" + 
+            "Max length: 150字.\n" +
             "Generated text must be " + adjective + ".\n" +
             "Only output the idea.",
         }],
