@@ -7,9 +7,9 @@ async function generateNewText(prompt, openai) {
     counter++;
     if (counter > limit) return "Generation stopped for safety. (Max " + limit + " generations)";
     
+    if (openai === undefined) return "OpenAI not initialized.";
     if (prompt === "") return "Prompt not defined.";
 
-    if (openai === undefined) return "OpenAI not initialized.";
     console.log(prompt)
 
     const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];

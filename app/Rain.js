@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import OpenAI from 'openai';
 import generateIdea from './generateIdea';
@@ -20,8 +22,6 @@ const Rain = () => {
     };
 
     updateDrops();
-
-    return () => {};
   }, []);
 
   useEffect(() => {
@@ -84,21 +84,21 @@ const Rain = () => {
   );
 };
 
-const generateRandomString = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let randomString = '';
-      for(let i = 0; i < 100; i++) {
-        randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-      }
-      resolve(randomString);
-    }, 50); // Simulating async operation delay
-  });
-};
-
-const uniqueKey = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
+// const generateRandomString = () => {
+//   return new Promise(resolve => {
+//     setTimeout(() => {
+//       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//       let randomString = '';
+//       for(let i = 0; i < 100; i++) {
+//         randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+//       }
+//       resolve(randomString);
+//     }, 50); // Simulating async operation delay
+//   });
+// };
+//
+// const uniqueKey = () => {
+//   return Math.random().toString(36).substr(2, 9);
+// };
 
 export default Rain;
