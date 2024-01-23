@@ -1,10 +1,11 @@
 import adjectives from "./adjectives";
 
 let counter = 0;
+const limit = 1000;
 
-async function generateNewText(prompt, openai, limit) {
+async function generateNewText(prompt, openai) {
     counter++;
-    if (counter > limit) return "Generation Stopped for safety.";
+    if (counter > limit) return "Generation stopped for safety. (Max " + limit + " generations)";
     
     if (prompt === "") return "Prompt not defined.";
 
