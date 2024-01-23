@@ -1,3 +1,13 @@
 body {
   margin: 0;
 }
+
+@keyframes fall {
+  from {
+    top: -50px;
+  }
+  to {
+    top: 100vh;
+  }
+}
+

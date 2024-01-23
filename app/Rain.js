@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from 'react';
 import OpenAI from 'openai';
 import generateIdea from './generateIdea';
@@ -11,72 +9,61 @@ const Rain = () => {
   let openai;
 
   useEffect(() => {
-    const updateDrops = () => {
-      console.log("updateDrops");
-      console.log(drops);
-      setDrops(currentDrops => currentDrops.map(drop => {
-        const fontSize = parseFloat(drop.style.fontSize);
-        return {
-        ...drop,
-        style: { ...drop.style, top: `${drop.top += fontSize / 20}px` },
-      }}).filter(drop => drop.top < window.innerHeight));
-      requestAnimationFrame(updateDrops);
-    };
-
-    updateDrops();
-  }, []);
-
-  useEffect(() => {
     const getQueryParam = (param) => {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(param);
     };
-  
-    // Extracting the API key from the URL
+
     const OPENAI_API_KEY = getQueryParam('key');
     if (OPENAI_API_KEY) {
       openai = new OpenAI({
         apiKey: OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true 
+        dangerouslyAllowBrowser: true
       });
     } else {
       console.error('No API key provided.');
     }
 
+    const handleAnimationEnd = (key) => {
+      setDrops(currentDrops => currentDrops.filter(drop => drop.key !== key));
+    };
+
     const createDrop = async () => {
       const leftPosition = Math.random() * (window.innerWidth - 400);
       const size = Math.random() * 10 + 10;
       const content = await generateIdea(prompt, openai);
+      const animationDuration = 15 - size/2;
+      const dropKey = uniqueKey();
       const newDrop = {
         content,
-        key: uniqueKey(),
-        top: 0,
+        key: dropKey,
         style: {
           left: `${leftPosition}px`,
           position: 'absolute',
-          maxWidth: '400px', 
+          maxWidth: '400px',
           overflowWrap: 'break-word',
           fontSize: `${size}px`,
-        }
+          animation: `fall ${animationDuration}s linear`
+        },
+        onEnd: () => handleAnimationEnd(dropKey)
       };
       setDrops(currentDrops => [...currentDrops, newDrop]);
     };
 
-    const createInterval = setInterval(createDrop, 200);//200);
-
+    const createInterval = setInterval(createDrop, 200);
     return () => clearInterval(createInterval);
   }, [prompt, openai]);
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden', height: '100vh' }}>
       {drops.map(drop => (
-        <div key={drop.key} style={drop.style}>
+        <div key={drop.key} style={drop.style} onAnimationEnd={drop.onEnd}>
           {drop.content}
         </div>
       ))}
       <form style={{ position: 'absolute', top: 0, width: '100%', padding: '10px', backgroundColor: '#f0f0f0' }}>
         <textarea
-          placeholder="お題を入力してください。出力を見ながら、文字数や方向性を指定してみてください。"
+          placeholder="Enter a prompt here. Adjust the text length or direction as you observe the output."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           style={{ marginRight: '10px', width: '500px', height: '50px' }}
@@ -86,19 +73,6 @@ const Rain = () => {
   );
 };
 
-// const generateRandomString = () => {
-//   return new Promise(resolve => {
-//     setTimeout(() => {
-//       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//       let randomString = '';
-//       for(let i = 0; i < 100; i++) {
-//         randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-//       }
-//       resolve(randomString);
-//     }, 50); // Simulating async operation delay
-//   });
-// };
-//
 const uniqueKey = () => {
   return Math.random().toString(36).substr(2, 9);
 };
