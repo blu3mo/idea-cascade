@@ -22,6 +22,7 @@ async function generateNewText(prompt, openai) {
             "Only output the idea.",
         }],
         model: 'gpt-3.5-turbo',
+        max_tokens: 100,
     });
     console.log(chatCompletion);
     const newText = chatCompletion.choices[0].message.content;
