@@ -12,6 +12,8 @@ const Rain = () => {
 
   useEffect(() => {
     const updateDrops = () => {
+      console.log("updateDrops");
+      console.log(drops);
       setDrops(currentDrops => currentDrops.map(drop => {
         const fontSize = parseFloat(drop.style.fontSize);
         return {
