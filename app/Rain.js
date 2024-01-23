@@ -63,7 +63,7 @@ const Rain = () => {
       ))}
       <form style={{ position: 'absolute', top: 0, width: '100%', padding: '10px', backgroundColor: '#f0f0f0' }}>
         <textarea
-          placeholder="Enter a prompt here. Adjust the text length or direction as you observe the output."
+          placeholder="お題を入力してください。出力の様子を見ながら、文字数や方向性の指示を追加してみてください。 Enter your prompt here. Add instructions for length and content as you observe the output."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           style={{ marginRight: '10px', width: '500px', height: '50px' }}
