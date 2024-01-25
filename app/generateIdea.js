@@ -17,13 +17,14 @@ async function generateNewText(prompt, openai) {
         messages: [{
             role: 'user',
             content: "Generate: " + prompt + "\n" +
-            "Language: Japanese.\n" + 
-            "Be consice. Max length: 100字.\n" +
+            //"Language: Japanese.\n" + 
+            "Be consice. Max length: 80 words.\n" +
             "Generated text must be " + adjective + ".\n" +
             "Only output the idea.",
         }],
         model: 'gpt-3.5-turbo',
         max_tokens: 150,
+        temperature: 1,
     });
     console.log(chatCompletion);
     const newText = chatCompletion.choices[0].message.content;

@@ -50,7 +50,7 @@ const Rain = () => {
           overflowWrap: 'break-word',
           fontSize: `${size}px`,
           animation: `fall ${animationDuration}s linear`,
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
           // align vertical to center
           display: 'flex',
           alignItems: 'center',
@@ -62,7 +62,7 @@ const Rain = () => {
       setDrops(currentDrops => [...currentDrops, newDrop]);
     };
 
-    const createInterval = setInterval(createDrop, 200);
+    const createInterval = setInterval(createDrop, 500);
     return () => clearInterval(createInterval);
   }, [prompt, openai]);
 
@@ -79,14 +79,14 @@ const Rain = () => {
             placeholder="お題を入力してください。出力の様子を見ながら、文字数や方向性の指示を追加してみてください。 Enter your prompt here. Add instructions for length and content as you observe the output."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            style={{ marginRight: '10px', width: '500px', height: '50px' }}
+            style={{ width: 'calc(100% - 50px)', height: '50px', fontSize: '16px' }}
           />
         </form>
       </div>
       <div style={{ width: '200px', backgroundColor: '#f9f9f9', overflowY: 'auto', padding: '10px', boxSizing: 'border-box' }}>
         {selectedDrops.length > 0 ? selectedDrops.map((content, index) => (
           <div key={index} style={{ marginBottom: '10px', fontSize: '12px', maxHeight: '100px', overflowY: 'auto' }}>{content}</div>
-        )) : <div style={{ fontSize: '14px' }}>降っていることばをクリックして保存</div>}
+        )) : <div style={{ fontSize: '14px' }}>降っていることばをクリックして保存. Click to save the falling words.</div>}
       </div>
     </div>
   );
