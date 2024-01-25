@@ -86,7 +86,7 @@ const Rain = () => {
       <div style={{ width: '200px', backgroundColor: '#f9f9f9', overflowY: 'auto', padding: '10px', boxSizing: 'border-box' }}>
         {selectedDrops.length > 0 ? selectedDrops.map((content, index) => (
           <div key={index} style={{ marginBottom: '10px', fontSize: '12px', maxHeight: '100px', overflowY: 'auto' }}>{content}</div>
-        )) : <div style={{ fontSize: '14px' }}>降っていることばをクリックして保存. Click to save the falling words.</div>}
+        )) : <div style={{ fontSize: '14px' }}>降っていることばをクリックして保存. Click the falling words to save them.</div>}
       </div>
     </div>
   );
