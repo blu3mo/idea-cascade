@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import OpenAI from 'openai';
 import generateIdea from './generateIdea';
+import uniqueKey from './uniqueKey';
 
 const Rain = () => {
   const [drops, setDrops] = useState([]);
@@ -90,10 +91,6 @@ const Rain = () => {
       </div>
     </div>
   );
-};
-
-const uniqueKey = () => {
-  return Math.random().toString(36).substr(2, 9);
 };
 
 export default Rain;
