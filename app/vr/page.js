@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text } from "@react-three/drei";
 import { VRButton, XR } from "@react-three/xr";
+import OpenAI from 'openai';
 import generateIdea from '../generateIdea';
 import uniqueKey from "../uniqueKey";
 import styles from "./vr.module.css";
 
 const Texts = ({drops, setDrops}) => {
-  const PROGRESS_PER_FRAME = 0.0015
+  const PROGRESS_PER_FRAME = 0.001
   const MAX_HEIGHT = 5
   const MIN_HEIGHT = -3
   const MAX_RADIUS = 5
@@ -57,15 +58,18 @@ const Texts = ({drops, setDrops}) => {
     }
 
     {drops.map(drop => {
-      const theta = drop.theta * Math.PI - Math.PI / 2
+      const theta = drop.theta * Math.PI * 2 / 3 - Math.PI / 3
       const height = MAX_HEIGHT - drop.progress * (MAX_HEIGHT - MIN_HEIGHT)
       const r = MIN_RADIUS + drop.r * (MAX_RADIUS - MIN_RADIUS)
       return <Text
         key={drop.key}
         font="/fonts/noto_jp_medium.ttf"
-        fontSize={0.2}
+        fontSize={0.1}
+        lineHeight={1.6}
         color="#000000"
-        fillOpacity={1 - drop.r * 0.6}
+        fillOpacity={1 - drop.r}
+        maxWidth={3.5}
+        overflowWrap='break-word'
         position={[
           -r * Math.sin(theta),
           height,
@@ -80,14 +84,31 @@ const Texts = ({drops, setDrops}) => {
 }
 
 const VRPage = () => {
+  const DEFAULT_PROMPT = '新しいAR向けアプリのアイデアを30文字以内の日本語で1つ考えてください。'
   const textField = useRef()
-  const [prompt, setPrompt] = useState('新しいAR向けアプリのアイデアを30文字以内の日本語で1つ考えてください。')
+  const [prompt, setPrompt] = useState(DEFAULT_PROMPT)
   const [drops, setDrops] = useState([])
+  let openai
 
   useEffect(() => {
+    const getQueryParam = (param) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    };
+    const OPENAI_API_KEY = getQueryParam('key');
+    if (OPENAI_API_KEY) {
+      openai = new OpenAI({
+        apiKey: OPENAI_API_KEY,
+        dangerouslyAllowBrowser: true
+      });
+    } else {
+      console.error('No API key provided.');
+    }
+
     const createDrop = async () => {
       const newDrop = {
-        content: "Sample content here",
+        content: await generateIdea(prompt, openai),
+        // content: "新しいAR向けアプリのアイデアを30文字以内の日本語で1つ考えてください。",
         key: uniqueKey(),
         progress: 0, // progress: 0~1
         theta: Math.random(), // x: 0~1
@@ -95,15 +116,23 @@ const VRPage = () => {
       }
       setDrops(currentDrops => [...currentDrops, newDrop])
     }
-    const createInterval = setInterval(createDrop, 1000);
+    const createInterval = setInterval(createDrop, 500);
     return () => clearInterval(createInterval);
-  }, [prompt])
+  }, [prompt, openai])
   
   return (
     <main className={styles.container}>
       <div className={styles.vrButton}><VRButton></VRButton></div>
-      <a href='https://emmanuellee.com/webxr-samples/system-keyboard.html'>Resource link</a>
-      <input type="text" ref={textField} value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+      <div className={styles.controls}>
+        {/* <a href='https://emmanuellee.com/webxr-samples/system-keyboard.html'>Resource: keyboard sample</a> */}
+        <input type="text" ref={textField} value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+        {prompt == '' &&
+          <button onClick={() => setPrompt(DEFAULT_PROMPT)}>Restore default prompt</button>
+        }
+        {prompt != '' &&
+          <button onClick={() => setPrompt('')}>Clear prompt</button>
+        }
+      </div>
       <Canvas style={styles.canvas} onCreated={({ gl }) => {
         gl.setClearColor('#f0f0f0');
       }}>

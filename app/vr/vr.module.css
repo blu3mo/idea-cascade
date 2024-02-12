@@ -10,3 +10,8 @@
 .canvas {
   background-color: #f5f5f5;
 }
+
+.controls {
+  display: flex;
+  flex-direction: column;
+}
